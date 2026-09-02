@@ -31,6 +31,33 @@ function getGroupWidth(group){
     return width
 }
 
+function generateGradientName(group)
+{
+    let gradient_name = "grad-" + group.name.replace(/[^a-zA-Z0-9]/g, "")
+    // .replace(pattern, replacement) replaces the pattern for the replacement, with a regex that deletes ALL (/g) non (^) alphanumeric (a-zA-Z0-9) characters
+    return gradient_name
+}
+
+function getGradient(group)
+{
+    let colors_and_offsets = []
+    if (group.colors.length == 1)
+    {
+        return [{color: group.colors[0], offset: 0}]
+    }
+    else
+    {
+        for (let i = 0; i < group.colors.length; i++)
+        {
+            colors_and_offsets[i] = {
+                color: group.colors[i],
+                offset: i / (group.colors.length - 1) * 100
+            }
+        }
+        return colors_and_offsets
+    }
+}
+
 
 // CONSTANTS AND VARIABLES
 
@@ -61,6 +88,19 @@ const xScale = d3.scaleTime()
 d3.select("svg")
 .attr("width", total_range + margin.left + margin.right)
 
+d3.select("svg")
+.append("defs")  // an element that holds reusable definitions, but isnt rendered on its own
+.selectAll("linearGradient")
+.data(groups) // one gradient per group
+.join("linearGradient")
+.attr("id", d => generateGradientName(d)) 
+.selectAll("stop") // select each stop for the gradient
+.data(d => getGradient(d))
+.join("stop")
+.attr("offset", d => d.offset + "%")
+.attr("stop-color", d => d.color)
+
+
 d3.select("svg") // selects the <div> im using, this time, an svg
 .selectAll("rect") // selects all the <rect> elements (will be empty, but its good practice)
 .data(groups) // the data (array) that will be paired to an element
@@ -69,7 +109,7 @@ d3.select("svg") // selects the <div> im using, this time, an svg
 .attr("y", (_, i) => i*rowHeight + fontSize) // i represents the second parameter of the callback function, that is the index, by using an _ in the first parameter, im representing that i need to have something in the first slot to reach for the index, but i wont use the variable in the first slot
 .attr("width", d => getGroupWidth(d))
 .attr("height", 15) // since the y-axis grows downwards, and the y position is measured from the rectangle's top-left edge, height needs to be smaller than the rowHeight, so that there won't be any ovarlap (with rowHeight = 20 and height = 15, there will be a 5px gap between each bar)
-.attr("fill", "steelblue")
+.attr("fill", d => "url(#" + generateGradientName(d) + ")")
 
 d3.select("svg")
 .selectAll("text")
