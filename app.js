@@ -68,6 +68,8 @@ const now = new Date();
 const rowHeight = 40;
 const fontSize = 12;
 const textYOffset = 4;
+const chartWrapper = document.querySelector("#chart-wrapper")
+const axisWrapper = document.querySelector("#axis-wrapper")
 
 // LOGIC
 
@@ -128,3 +130,11 @@ d3.select("#chart")
 d3.select("#axis")
 .append("g")
 .call(d3.axisBottom(xScale))
+
+d3.select("#axis")
+.attr("width", total_range + margin.left + margin.right)
+.attr("height", 30)
+
+chartWrapper.addEventListener("scroll", function() {
+    axisWrapper.scrollLeft = chartWrapper.scrollLeft;
+})

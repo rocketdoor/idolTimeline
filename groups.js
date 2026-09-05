@@ -1,6 +1,8 @@
 // structure of each idol array:
 // {name: " ", debut_date: "yyyy-mm-dd", disband_date: "yyyy-mm-dd"|null, company: " ", type: "boy group|girl group|coed group|solo|genderless|band?", colors: [#HEX1, #HEX2]}
 // maybe add active period?
+// update groups that changed companies
+
 const groups=[
     // SM
     {   

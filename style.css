@@ -1,2 +1,3 @@
-#wrapper {overflow-x: auto}
-#axis {position: sticky; top: 0; background: white}
+#axis-wrapper {overflow-x: hidden} /* allows to be scrolled by JS without letting the user scroll*/
+#chart-wrapper {overflow-x: auto}
+#axis-sticky {position: sticky; top: 0; background: white}
