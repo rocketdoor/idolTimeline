@@ -85,10 +85,13 @@ const xScale = d3.scaleTime()
 .domain([earliest, now])
 .range([margin.left, total_range + margin.left])
 
-d3.select("svg")
+d3.select("#chart")
 .attr("width", total_range + margin.left + margin.right)
+.attr("height", groups.length * (rowHeight + fontSize))
 
-d3.select("svg")
+
+// BUILDS GRADIENTS
+d3.select("#chart")
 .append("defs")  // an element that holds reusable definitions, but isnt rendered on its own
 .selectAll("linearGradient")
 .data(groups) // one gradient per group
@@ -100,8 +103,8 @@ d3.select("svg")
 .attr("offset", d => d.offset + "%")
 .attr("stop-color", d => d.color)
 
-
-d3.select("svg") // selects the <div> im using, this time, an svg
+// BUILDS BARS
+d3.select("#chart") // selects the <div> im using, this time, an svg
 .selectAll("rect") // selects all the <rect> elements (will be empty, but its good practice)
 .data(groups) // the data (array) that will be paired to an element
 .join("rect") // for each item in the array that doesnt have an element, create (append) a rect
@@ -111,7 +114,8 @@ d3.select("svg") // selects the <div> im using, this time, an svg
 .attr("height", 15) // since the y-axis grows downwards, and the y position is measured from the rectangle's top-left edge, height needs to be smaller than the rowHeight, so that there won't be any ovarlap (with rowHeight = 20 and height = 15, there will be a 5px gap between each bar)
 .attr("fill", d => "url(#" + generateGradientName(d) + ")")
 
-d3.select("svg")
+// BUILDS THE LABELS
+d3.select("#chart")
 .selectAll("text")
 .data(groups)
 .join("text")
@@ -119,3 +123,8 @@ d3.select("svg")
 .attr("y", (_,i) => i*rowHeight + fontSize - textYOffset)
 .attr("font-size", fontSize)
 .text(d => d.name)
+
+//BUILDS THE AXIS
+d3.select("#axis")
+.append("g")
+.call(d3.axisBottom(xScale))
